@@ -1,0 +1,427 @@
+/* ============================================================
+   ПРОФИЛЬ ПУТЕШЕСТВЕННИКА — СТИЛЬ САЙТА
+============================================================ */
+
+/* ============ HERO С ФОНОМ (как about-hero-section) ============ */
+.client-hero-bg {
+  position: relative;
+  padding: 60px 0 80px;
+  overflow: hidden;
+  background: #3D5A40;
+}
+.client-hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  z-index: 0;
+}
+.client-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(44, 62, 46, 0.88) 0%,
+    rgba(44, 62, 46, 0.75) 50%,
+    rgba(44, 62, 46, 0.62) 100%
+  );
+  z-index: 1;
+}
+.client-hero-bg .container {
+  position: relative;
+  z-index: 2;
+}
+
+.client-hero-bg .breadcrumb {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 32px;
+}
+.client-hero-bg .breadcrumb a {
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s;
+}
+.client-hero-bg .breadcrumb a:hover {
+  color: #fff;
+}
+
+/* ============ СТРОКА HERO ============ */
+.client-hero-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 32px;
+  align-items: center;
+}
+
+.client-avatar-lg {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E8C56B 0%, #B8860B 100%);
+  color: #1A1A1A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 42px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.client-hero-text {
+  min-width: 0;
+}
+
+.client-hero-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 10px;
+}
+
+.client-hero-text h1 {
+  font-family: var(--font-serif);
+  font-size: 48px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+
+.client-hero-meta {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 14px;
+}
+
+.client-hero-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.client-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.client-badge--vip {
+  background: linear-gradient(135deg, rgba(232, 197, 107, 0.25), rgba(184, 134, 11, 0.25));
+  color: #F0D68C;
+  border-color: rgba(232, 197, 107, 0.4);
+}
+.client-badge--active {
+  background: rgba(126, 168, 130, 0.25);
+  color: #B8D9BB;
+  border-color: rgba(126, 168, 130, 0.4);
+}
+
+.client-hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ============ КОНТЕНТ ============ */
+.client-content-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.client-block {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 32px 28px;
+  transition: background-color 0.35s, border-color 0.35s;
+}
+[data-theme="dark"] .client-block {
+  background: #131A16;
+  border-color: #26302A;
+}
+
+.client-block-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.client-block-header h2 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.client-block-header .section-label {
+  margin-bottom: 4px;
+}
+
+.client-block-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ============ ПОЕЗДКИ ============ */
+.client-trip-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.client-trip-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.client-trip-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--green-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.client-trip-row:hover .client-trip-ico {
+  background: var(--green);
+  color: #fff;
+}
+
+.client-trip-info {
+  flex: 1;
+  min-width: 0;
+}
+.client-trip-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.client-trip-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.client-trip-amount {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+/* ============ ОТЗЫВЫ ============ */
+.client-review-row {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+.client-review-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.client-review-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.client-review-tour {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+.client-review-stars {
+  color: #E8B44A;
+  font-size: 14px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.client-review-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.client-review-date {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* ============ ПУСТОЕ СОСТОЯНИЕ ============ */
+.client-empty {
+  padding: 40px 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  background: var(--beige);
+  border-radius: 14px;
+  line-height: 1.6;
+}
+[data-theme="dark"] .client-empty {
+  background: #1A231D;
+}
+
+/* ============ БЛОК "О ПУТЕШЕСТВЕННИКЕ" ============ */
+.client-about-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.client-about-grid h2 {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 1.15;
+  max-width: 520px;
+  margin: 12px 0 20px;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.client-note {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-muted);
+  max-width: 520px;
+}
+
+.client-about-cta-inner {
+  background: var(--green-dark);
+  color: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.client-about-cta-inner::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(126, 168, 130, 0.15);
+  filter: blur(40px);
+}
+.client-about-cta-inner h3 {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 8px;
+  position: relative;
+}
+.client-about-cta-inner p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 20px;
+  line-height: 1.6;
+  position: relative;
+}
+.client-about-cta-inner .btn {
+  position: relative;
+  background: #7EA882;
+  color: #0D1210;
+}
+.client-about-cta-inner .btn:hover {
+  background: #fff;
+}
+
+/* ============ СТАТИСТИКА (карточки как на about) ============ */
+.page-client .stats-row {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.page-client .stat-card strong {
+  color: var(--green);
+}
+
+/* ============ АДАПТИВ ============ */
+@media (max-width: 900px) {
+  .client-hero-row {
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+  }
+  .client-hero-actions {
+    grid-column: 1 / -1;
+  }
+  .client-avatar-lg {
+    width: 88px;
+    height: 88px;
+    font-size: 32px;
+  }
+  .client-hero-text h1 {
+    font-size: 32px;
+  }
+  .client-hero-bg {
+    padding: 40px 0 60px;
+  }
+  .client-hero-bg::before {
+    background-attachment: scroll;
+  }
+  .client-content-grid {
+    grid-template-columns: 1fr;
+  }
+  .client-about-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .client-about-grid h2 {
+    font-size: 28px;
+  }
+  .client-block {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .client-hero-text h1 {
+    font-size: 26px;
+  }
+  .client-avatar-lg {
+    width: 72px;
+    height: 72px;
+    font-size: 26px;
+  }
+  .client-block-header h2 {
+    font-size: 22px;
+  }
+}

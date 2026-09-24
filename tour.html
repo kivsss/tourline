@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тур — Tourline</title>
+<script>
+  (function(){var t=localStorage.getItem('tl-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="page-tour">
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+    <button class="burger"><span></span></button>
+    <nav class="nav">
+      <a href="destinations.html">Направления</a>
+      <a href="tours.html">Туры</a>
+      <a href="weekly.html">Туры недели</a>
+      <a href="reviews.html">Отзывы</a>
+      <a href="about.html">О нас</a>
+      <a href="contacts.html">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <a href="tel:+74951204580" class="header-phone"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>+7 495 120-45-80</a>
+      <span data-auth-slot></span>
+      <a href="#" class="btn btn-primary" data-modal="tour">Забронировать тур</a>
+    </div>
+  </div>
+</header>
+
+<!-- Загрузка -->
+<section class="page-header" id="tour-loading">
+  <div class="container">
+    <p style="color:var(--text-muted);padding:60px 0;text-align:center;">Загружаем тур…</p>
+  </div>
+</section>
+
+<!-- Ошибка -->
+<section class="page-header" id="tour-error" style="display:none;">
+  <div class="container" style="text-align:center;padding:80px 0;">
+    <h1>Тур не найден</h1>
+    <p style="color:var(--text-muted);margin:16px 0 24px;">Возможно, ссылка устарела. Посмотрите другие направления.</p>
+    <a href="destinations.html" class="btn btn-primary">Все направления</a>
+  </div>
+</section>
+
+<!-- Детали тура -->
+<section class="page-header" id="tour-content" style="display:none;">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Главная</a> / <a href="tours.html">Туры</a> / <span id="bc-tour">—</span>
+    </div>
+
+    <div class="tour-hero">
+      <div>
+        <h1 id="t-title">—</h1>
+        <div class="tour-meta">
+          <span id="t-days">—</span>
+          <span>·</span>
+          <span id="t-region">—</span>
+          <span>·</span>
+          <span id="t-group">—</span>
+          <span>·</span>
+          <span>★ <span id="t-rating">—</span> — <span id="t-reviews">—</span> отзывов</span>
+        </div>
+      </div>
+      <div class="tour-price-box">
+        <div class="price">от <span id="t-price">—</span> ₽</div>
+        <div class="price-note">за человека · при 2 гостях</div>
+        <a href="#" class="btn btn-primary" data-modal="tour"><svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Забронировать</a>
+      </div>
+    </div>
+
+    <div class="tour-gallery" id="t-gallery"></div>
+
+    <div class="tour-info-bar">
+      <div class="tour-info-item"><label>Длительность</label><span id="t-info-days">—</span></div>
+      <div class="tour-info-item"><label>Группа</label><span id="t-info-group">—</span></div>
+      <div class="tour-info-item"><label>Питание</label><span id="t-info-meals">—</span></div>
+      <div class="tour-info-item"><label>Транспорт</label><span id="t-info-transport">—</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-cream" style="padding-top:0;" id="tour-body" hidden>
+  <div class="container">
+    <div class="section-label">Программа тура</div>
+    <h2>Что вас ждёт по дням</h2>
+    <p style="color:var(--text-muted);margin-top:12px;" id="t-description">—</p>
+    <div class="itinerary" id="t-itinerary"></div>
+  </div>
+</section>
+
+<section class="section section-beige" id="tour-included" hidden>
+  <div class="container">
+    <div class="section-label">Что входит в тур</div>
+    <h2>Включено и не включено в стоимость</h2>
+    <div class="included-grid">
+      <div class="included-box">
+        <h4>Включено в стоимость</h4>
+        <ul id="t-included"></ul>
+      </div>
+      <div class="included-box excluded">
+        <h4>Не включено</h4>
+        <ul id="t-excluded"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-cream" id="tour-pricing" hidden>
+  <div class="container">
+    <div class="section-label">Варианты размещения</div>
+    <h2>Стоимость и размещение</h2>
+    <div class="pricing-grid" id="t-pricing"></div>
+  </div>
+</section>
+
+<section class="section section-beige" id="booking">
+  <div class="container">
+    <div class="section-label">Бронирование</div>
+    <h2>Оставьте заявку на тур</h2>
+    <p style="color:var(--text-muted);margin-top:12px;">Перезвоним в течение 15 минут, подтвердим даты и пришлём договор. Предоплата — только после согласования.</p>
+
+    <div class="booking-grid">
+      <form class="booking-form" data-form="tour-detail">
+        <h3>Данные для бронирования</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Имя и фамилия</label>
+            <input type="text" name="name" placeholder="Иван Иванов" required>
+          </div>
+          <div class="form-group">
+            <label>Телефон</label>
+            <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email для договора</label>
+          <input type="email" name="email" placeholder="email@example.com" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Дата вылета</label>
+            <input type="date" name="date">
+          </div>
+          <div class="form-group">
+            <label>Гостей</label>
+            <select name="guests">
+              <option>2 гостя</option>
+              <option>1 гость</option>
+              <option>3 гостя</option>
+              <option>4+ гостей</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Пожелания к отелю, питанию или перелёту</label>
+          <textarea name="comment" placeholder="Например: тихий номер, вид на море..."></textarea>
+        </div>
+        <label class="checkbox-row">
+          <input type="checkbox" required>
+          <span>Согласен с обработкой персональных данных и политикой конфиденциальности агентства.</span>
+        </label>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Отправить заявку</button>
+      </form>
+
+      <div>
+        <div class="manager-card" id="t-manager"></div>
+        <div class="guarantee-card">
+          <svg viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div>
+            <strong style="display:block;color:var(--text);margin-bottom:4px;">Гарантия лучшей цены</strong>
+            Найдёте этот же тур дешевле — вернём разницу и добавим 5% бонусами на следующую поездку.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-cream">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Похожие туры</div>
+        <h2>Ещё варианты в этом сезоне</h2>
+      </div>
+      <a href="destinations.html" class="link-arrow">Все направления →</a>
+    </div>
+    <div class="tours-grid tours-grid-3" id="t-similar"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+        <p>Туристическое агентство полного цикла: подбираем, бронируем и сопровождаем путешествия с 2009 года.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+          <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+          <a href="#" aria-label="VK"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 10c0 4 3 6 4 6V8"/><path d="M12 14c1 0 4-2 4-6"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Направления</h4><ul><li><a href="destinations.html">Все направления</a></li><li><a href="destinations.html">Европа</a></li><li><a href="destinations.html">Азия</a></li><li><a href="destinations.html">Острова</a></li><li><a href="tours.html">Все туры</a></li></ul></div>
+      <div class="footer-col"><h4>Компания</h4><ul><li><a href="about.html">О нас</a></li><li><a href="weekly.html">Туры недели</a></li><li><a href="reviews.html">Отзывы</a></li><li><a href="vacancies.html">Вакансии</a></li><li><a href="contacts.html">Контакты</a></li></ul></div>
+      <div class="footer-col"><h4>Помощь</h4><ul><li><a href="help.html#booking">Как забронировать</a></li><li><a href="help.html#payment">Оплата и рассрочка</a></li><li><a href="help.html#return">Возврат и перенос</a></li><li><a href="help.html#insurance">Страховка</a></li><li><a href="faq.html">Частые вопросы</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2025 Tourline · Все права защищены</span><span>Лицензия туроператора РТО 012345 · Москва, ул. Петровка, 26</span><a href="tel:+74951204580">+7 495 120-45-80</a><a href="mailto:hello@tourline.ru">hello@tourline.ru</a></div>
+  </div>
+</footer>
+
+<script src="tours-data.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

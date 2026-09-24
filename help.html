@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Помощь — Tourline</title>
+<script>
+  (function(){var t=localStorage.getItem('tl-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+    <button class="burger"><span></span></button>
+    <nav class="nav">
+      <a href="destinations.html">Направления</a>
+      <a href="tours.html">Туры</a>
+      <a href="weekly.html">Туры недели</a>
+      <a href="reviews.html">Отзывы</a>
+      <a href="about.html">О нас</a>
+      <a href="contacts.html">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <a href="tel:+74951204580" class="header-phone"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>+7 495 120-45-80</a>
+      <span data-auth-slot></span>
+      <a href="#" class="btn btn-primary" data-modal="booking">Забронировать тур</a>
+    </div>
+  </div>
+</header>
+
+<section class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Главная</a> / <span>Помощь</span></div>
+    <h1>Помощь и документы</h1>
+    <p style="color:var(--text-muted);margin-top:12px;">Как забронировать, оплатить, вернуть или застраховать поездку.</p>
+
+    <div class="tabs" data-tabs="help" style="margin-top:24px;">
+      <button class="tab active" data-tab="booking" type="button">Как забронировать</button>
+      <button class="tab" data-tab="payment" type="button">Оплата и рассрочка</button>
+      <button class="tab" data-tab="return" type="button">Возврат и перенос</button>
+      <button class="tab" data-tab="insurance" type="button">Страховка</button>
+    </div>
+  </div>
+</section>
+
+<section class="section section-cream" style="padding-top:0;">
+  <div class="container">
+    <div data-tab-content="help">
+
+      <div class="article" data-tab-pane="booking">
+        <h2 id="booking">Как забронировать тур</h2>
+        <p>Бронирование проходит в 5 шагов. Обычно весь процесс занимает 1–2 дня, а место в туре закрепляется после предоплаты.</p>
+        <ol>
+          <li><strong>Оставьте заявку</strong> на сайте или позвоните по телефону +7 495 120-45-80.</li>
+          <li><strong>Обсудите детали</strong> с менеджером: даты, состав группы, пожелания по отелю.</li>
+          <li><strong>Получите 3 варианта</strong> на выбор с ценой и составом тура — в течение дня.</li>
+          <li><strong>Подпишите договор</strong> и внесите предоплату 20% от стоимости. Место закреплено.</li>
+          <li><strong>Оплатите остаток</strong> за 14 дней до вылета. Документы и памятка придут на email.</li>
+        </ol>
+        <div class="callout"><strong>Важно:</strong> на популярные направления места заканчиваются за 2–3 месяца. Если тур нужен на майские или новогодние — бронируйте заранее.</div>
+        <h2>Какие документы нужны</h2>
+        <ul>
+          <li>Паспорт РФ (действителен минимум 6 месяцев после возврата).</li>
+          <li>Загранпаспорт для выездных туров.</li>
+          <li>Медицинский полис (оформляем сами по умолчанию).</li>
+          <li>Согласие на обработку персональных данных.</li>
+        </ul>
+      </div>
+
+      <div class="article" data-tab-pane="payment" style="display:none;">
+        <h2 id="payment">Оплата и рассрочка</h2>
+        <p>Мы принимаем оплату картой, переводом и в рассрочку. Все платежи проходят через защищённые шлюзы.</p>
+        <h2>Способы оплаты</h2>
+        <ul>
+          <li><strong>Банковской картой</strong> — Visa, Mastercard, МИР. Онлайн или в офисе.</li>
+          <li><strong>Банковским переводом</strong> — для физических и юридических лиц.</li>
+          <li><strong>Рассрочка 0%</strong> — до 6 месяцев от банков-партнёров (Тинькофф, Сбер, Альфа).</li>
+          <li><strong>Подарочный сертификат</strong> — от 30 000 ₽, действует 12 месяцев.</li>
+        </ul>
+        <h2>Схема оплаты</h2>
+        <ol>
+          <li><strong>20%</strong> — предоплата при подписании договора (закрепляет место).</li>
+          <li><strong>80%</strong> — не позднее 14 дней до вылета.</li>
+        </ol>
+        <div class="callout"><strong>Для туров «в последний момент»</strong> (менее 14 дней до вылета) оплата производится полной суммой сразу.</div>
+        <h2>Рассрочка: как оформить</h2>
+        <ol>
+          <li>Выберите тур и подтвердите его у менеджера.</li>
+          <li>Оставьте заявку на рассрочку — банк пришлёт ссылку на анкету.</li>
+          <li>Заполните анкету онлайн (5 минут), получите решение.</li>
+          <li>Подпишите договор — тур забронирован, платите ежемесячно.</li>
+        </ol>
+        <p>Переплата — 0%. Первый платёж — через месяц после оформления.</p>
+      </div>
+
+      <div class="article" data-tab-pane="return" style="display:none;">
+        <h2 id="return">Возврат и перенос</h2>
+        <p>Условия возврата зависят от того, сколько дней осталось до вылета, и от политики отеля/авиакомпании.</p>
+        <h2>Стандартные сроки возврата</h2>
+        <ul>
+          <li><strong>Более 30 дней до вылета</strong> — возврат 100% стоимости тура минус фактически понесённые расходы.</li>
+          <li><strong>14–30 дней</strong> — возврат 70–90% в зависимости от отеля.</li>
+          <li><strong>7–14 дней</strong> — возврат 50–70%.</li>
+          <li><strong>Менее 7 дней</strong> — возврат невозможен, но возможен перенос.</li>
+        </ul>
+        <div class="callout"><strong>Совет:</strong> оформите страховку от невыезда — она покроет до 90% стоимости тура при отмене по уважительной причине.</div>
+        <h2>Как перенести тур</h2>
+        <ol>
+          <li>Свяжитесь с менеджером как можно раньше — чем больше времени, тем больше вариантов.</li>
+          <li>Мы оценим возможность переноса и удерживаемые суммы.</li>
+          <li>Выберите новые даты, подпишите допсоглашение.</li>
+          <li>Доплата — только разница в цене, без штрафов от Tourline.</li>
+        </ol>
+        <h2>Как вернуть деньги</h2>
+        <ol>
+          <li>Напишите заявление на возврат (шаблон вышлем по email).</li>
+          <li>Мы передадим его поставщикам (отель, авиакомпания).</li>
+          <li>Возврат — на карту, с которой была оплата, в течение 10–30 рабочих дней.</li>
+        </ol>
+      </div>
+
+      <div class="article" data-tab-pane="insurance" style="display:none;">
+        <h2 id="insurance">Страховка</h2>
+        <p>Медицинская страховка включена в стоимость всех наших туров. Дополнительно можно оформить расширенные полисы.</p>
+        <h2>Что покрывает базовая страховка</h2>
+        <ul>
+          <li>Медицинская помощь до 1 000 000 ₽ (амбулатория, стационар).</li>
+          <li>Экстренная стоматология — до 30 000 ₽.</li>
+          <li>Медицинская эвакуация и репатриация.</li>
+          <li>Юридическая помощь при ДТП.</li>
+        </ul>
+        <h2>Дополнительные опции</h2>
+        <ul>
+          <li><strong>Страховка от невыезда</strong> — до 90% стоимости тура при отмене. От 1 500 ₽.</li>
+          <li><strong>Активный отдых</strong> — треккинг, дайвинг, горные лыжи. От 2 500 ₽.</li>
+          <li><strong>Страховка багажа</strong> — до 100 000 ₽. От 800 ₽.</li>
+          <li><strong>Страховка для детей</strong> — включена в семейный полис.</li>
+        </ul>
+        <div class="callout"><strong>Важно:</strong> перед поездкой сохраните номер полиса и телефон ассистанса. В экстренной ситуации сначала позвоните в ассистанс, а не в клинику.</div>
+        <h2>Как оформить</h2>
+        <p>Скажите менеджеру, какой полис нужен. Мы оформим в течение часа и пришлём полис на email. Полис действует с момента пересечения границы.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+        <p>Туристическое агентство полного цикла: подбираем, бронируем и сопровождаем путешествия с 2009 года.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+          <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+          <a href="#" aria-label="VK"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 10c0 4 3 6 4 6V8"/><path d="M12 14c1 0 4-2 4-6"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Направления</h4><ul><li><a href="destinations.html">Все направления</a></li><li><a href="destinations.html">Европа</a></li><li><a href="destinations.html">Азия</a></li><li><a href="destinations.html">Острова</a></li><li><a href="tours.html">Все туры</a></li></ul></div>
+      <div class="footer-col"><h4>Компания</h4><ul><li><a href="about.html">О нас</a></li><li><a href="weekly.html">Туры недели</a></li><li><a href="reviews.html">Отзывы</a></li><li><a href="vacancies.html">Вакансии</a></li><li><a href="contacts.html">Контакты</a></li></ul></div>
+      <div class="footer-col"><h4>Помощь</h4><ul><li><a href="help.html#booking">Как забронировать</a></li><li><a href="help.html#payment">Оплата и рассрочка</a></li><li><a href="help.html#return">Возврат и перенос</a></li><li><a href="help.html#insurance">Страховка</a></li><li><a href="faq.html">Частые вопросы</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2025 Tourline · Все права защищены</span><span>Лицензия туроператора РТО 012345 · Москва, ул. Петровка, 26</span><a href="tel:+74951204580">+7 495 120-45-80</a><a href="mailto:hello@tourline.ru">hello@tourline.ru</a></div>
+  </div>
+</footer>
+
+<script src="tours-data.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

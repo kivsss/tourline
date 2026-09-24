@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профиль путешественника — Tourline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="client.css">
+<script>
+  (function(){
+    var t = localStorage.getItem('tl-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+</head>
+<body class="page-client">
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+    <button class="burger"><span></span></button>
+    <nav class="nav">
+      <a href="destinations.html">Направления</a>
+      <a href="tours.html">Туры</a>
+      <a href="weekly.html">Туры недели</a>
+      <a href="reviews.html">Отзывы</a>
+      <a href="about.html">О нас</a>
+      <a href="contacts.html">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <a href="tel:+74951204580" class="header-phone"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>+7 495 120-45-80</a>
+      <span data-auth-slot></span>
+      <a href="#" class="btn btn-primary" data-modal="booking">Забронировать тур</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO-СЕКЦИЯ С ФОНОМ (как у about) ============ -->
+<section class="client-hero-bg">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Главная</a> / <a href="reviews.html">Отзывы</a> / <span id="c-bc-name">Профиль</span>
+    </div>
+
+    <div class="client-hero-row">
+      <div class="client-avatar-lg" id="c-avatar">—</div>
+      <div class="client-hero-text">
+        <div class="client-hero-label">Путешественник Tourline</div>
+        <h1 id="c-name">Загрузка…</h1>
+        <p class="client-hero-meta" id="c-meta">—</p>
+        <div class="client-hero-badges" id="c-badges"></div>
+      </div>
+      <div class="client-hero-actions">
+        <button class="btn btn-white" id="c-contact">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Связаться
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ СТАТИСТИКА ============ -->
+<section class="section section-cream" style="padding: 48px 0 20px;">
+  <div class="container">
+    <div class="stats-row" id="c-stats"></div>
+  </div>
+</section>
+
+<!-- ============ ПОЕЗДКИ + ОТЗЫВЫ ============ -->
+<section class="section section-beige" style="padding: 60px 0;">
+  <div class="container">
+    <div class="client-content-grid">
+
+      <!-- Поездки -->
+      <div class="client-block">
+        <div class="client-block-header">
+          <div>
+            <div class="section-label">История</div>
+            <h2>Поездки</h2>
+          </div>
+          <span class="client-block-sub" id="c-trips-count">—</span>
+        </div>
+        <div id="c-trips"></div>
+      </div>
+
+      <!-- Отзывы -->
+      <div class="client-block">
+        <div class="client-block-header">
+          <div>
+            <div class="section-label">Оценки</div>
+            <h2>Отзывы</h2>
+          </div>
+          <span class="client-block-sub" id="c-reviews-count">—</span>
+        </div>
+        <div id="c-reviews"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ О ПУТЕШЕСТВЕННИКЕ ============ -->
+<section class="section section-cream" style="padding: 60px 0;">
+  <div class="container">
+    <div class="client-about-grid">
+      <div>
+        <div class="section-label">О путешественнике</div>
+        <h2 id="c-about-title">Любит спокойные маршруты</h2>
+        <p class="client-note" id="c-note">
+          Постоянный клиент Tourline. Путешествует по Европе и Азии, предпочитает
+          спокойные маршруты с продуманной логистикой и качественными отелями.
+        </p>
+      </div>
+      <div class="client-about-cta">
+        <div class="client-about-cta-inner">
+          <h3>Хотите так же?</h3>
+          <p>Подберём маршрут под ваш ритм и бюджет — три варианта за день.</p>
+          <button class="btn btn-primary" data-modal="booking">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Оставить заявку
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+        <p>Туристическое агентство полного цикла: подбираем, бронируем и сопровождаем путешествия с 2009 года.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+          <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+          <a href="#" aria-label="VK"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 10c0 4 3 6 4 6V8"/><path d="M12 14c1 0 4-2 4-6"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Направления</h4><ul><li><a href="destinations.html">Все направления</a></li><li><a href="destinations.html">Европа</a></li><li><a href="destinations.html">Азия</a></li><li><a href="destinations.html">Острова</a></li><li><a href="tours.html">Все туры</a></li></ul></div>
+      <div class="footer-col"><h4>Компания</h4><ul><li><a href="about.html">О нас</a></li><li><a href="weekly.html">Туры недели</a></li><li><a href="reviews.html">Отзывы</a></li><li><a href="vacancies.html">Вакансии</a></li><li><a href="contacts.html">Контакты</a></li></ul></div>
+      <div class="footer-col"><h4>Помощь</h4><ul><li><a href="help.html#booking">Как забронировать</a></li><li><a href="help.html#payment">Оплата и рассрочка</a></li><li><a href="help.html#return">Возврат и перенос</a></li><li><a href="help.html#insurance">Страховка</a></li><li><a href="faq.html">Частые вопросы</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Tourline · Все права защищены</span>
+      <span>Лицензия туроператора РТО 012345 · Москва, ул. Петровка, 26</span>
+      <a href="tel:+74951204580">+7 495 120-45-80</a>
+      <a href="mailto:hello@tourline.ru">hello@tourline.ru</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  const load = (k, fb) => { try { return JSON.parse(localStorage.getItem(k)) || fb; } catch (e) { return fb; } };
+  const esc = (s) => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const initials = (n) => (n || '').trim().split(/\s+/).map(w => w[0] || '').slice(0, 2).join('').toUpperCase();
+
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+
+  const clients  = load('tl-clients', []);
+  const bookings = load('tl-bookings', []);
+  const reviews  = load('tl-reviews', []);
+
+  const client = clients.find(c => c.id === id) || null;
+
+  if (!client) {
+    document.getElementById('c-name').textContent = 'Клиент не найден';
+    document.getElementById('c-meta').textContent = 'Проверьте ссылку или вернитесь на главную';
+    document.getElementById('c-avatar').textContent = '?';
+    document.getElementById('c-bc-name').textContent = 'Не найден';
+    document.getElementById('c-stats').innerHTML = '';
+    document.getElementById('c-trips').innerHTML = `<div class="client-empty">Профиль не найден</div>`;
+    document.getElementById('c-reviews').innerHTML = '';
+    document.getElementById('c-about-title').textContent = '—';
+    document.getElementById('c-note').textContent = '';
+    return;
+  }
+
+  /* ---- Заголовок ---- */
+  document.title = client.name + ' — Tourline';
+  document.getElementById('c-avatar').textContent = initials(client.name);
+  document.getElementById('c-name').textContent = client.name;
+  document.getElementById('c-bc-name').textContent = client.name;
+  document.getElementById('c-meta').textContent =
+    'Клиент с 2021 года · ' + (client.city || 'Россия');
+
+  /* ---- Бейджи ---- */
+  const badges = document.getElementById('c-badges');
+  badges.innerHTML = '';
+  if (client.status === 'vip') {
+    badges.innerHTML += `<span class="client-badge client-badge--vip">
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      VIP-клиент
+    </span>`;
+  } else {
+    badges.innerHTML += `<span class="client-badge client-badge--active">Активный клиент</span>`;
+  }
+  badges.innerHTML += `<span class="client-badge">${esc(client.city || 'Россия')}</span>`;
+
+  /* ---- Кнопка «Связаться» ---- */
+  document.getElementById('c-contact').addEventListener('click', () => {
+    if (client.email) window.location.href = 'mailto:' + client.email;
+    else if (client.phone) window.location.href = 'tel:' + client.phone.replace(/\s/g, '');
+  });
+
+  /* ---- Данные ---- */
+  const cB = bookings.filter(b => (b.client || '').toLowerCase() === client.name.toLowerCase());
+  const cR = reviews.filter(r => (r.client || '').toLowerCase() === client.name.toLowerCase());
+
+  const avg = cR.length ? (cR.reduce((s, r) => s + (r.rating || 5), 0) / cR.length).toFixed(1) : '—';
+
+  /* ---- Статистика ---- */
+  document.getElementById('c-stats').innerHTML = `
+    <div class="stat-card"><strong>${client.trips || cB.length || 0}</strong><span>поездок всего</span></div>
+    <div class="stat-card"><strong>${cB.length}</strong><span>активных броней</span></div>
+    <div class="stat-card"><strong>${avg}${avg !== '—' ? ' ★' : ''}</strong><span>средняя оценка</span></div>
+    <div class="stat-card"><strong>${cR.length}</strong><span>отзывов оставлено</span></div>
+  `;
+
+  /* ---- Поездки ---- */
+  document.getElementById('c-trips-count').textContent = cB.length + ' ' +
+    (cB.length === 1 ? 'поездка' : cB.length < 5 ? 'поездки' : 'поездок');
+
+  if (cB.length) {
+    document.getElementById('c-trips').innerHTML = cB.map(b => `
+      <div class="client-trip-row">
+        <div class="client-trip-ico">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+        </div>
+        <div class="client-trip-info">
+          <div class="client-trip-name">${esc(b.tour)}</div>
+          <div class="client-trip-date">${esc(b.date)}</div>
+        </div>
+        <div class="client-trip-amount">€ ${Number(b.amount || 0).toLocaleString('ru-RU')}</div>
+      </div>
+    `).join('');
+  } else {
+    document.getElementById('c-trips').innerHTML =
+      `<div class="client-empty">История поездок пока пуста — самое интересное впереди.</div>`;
+  }
+
+  /* ---- Отзывы ---- */
+  document.getElementById('c-reviews-count').textContent = cR.length + ' ' +
+    (cR.length === 1 ? 'отзыв' : cR.length < 5 ? 'отзыва' : 'отзывов');
+
+  if (cR.length) {
+    document.getElementById('c-reviews').innerHTML = cR.map(r => `
+      <div class="client-review-row">
+        <div class="client-review-head">
+          <div class="client-review-tour">${esc(r.tour)}</div>
+          <div class="client-review-stars">${'★'.repeat(r.rating || 5)}</div>
+        </div>
+        <p class="client-review-text">«${esc(r.text)}»</p>
+        <div class="client-review-date">${esc(r.date)}</div>
+      </div>
+    `).join('');
+  } else {
+    document.getElementById('c-reviews').innerHTML =
+      `<div class="client-empty">Пока нет отзывов — самое время отправиться в путь.</div>`;
+  }
+
+})();
+</script>
+
+<script src="tours-data.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

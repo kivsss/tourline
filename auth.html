@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вход и регистрация — Tourline</title>
+<script>
+  (function(){var t=localStorage.getItem('tl-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+    <button class="burger"><span></span></button>
+    <nav class="nav">
+      <a href="destinations.html">Направления</a>
+      <a href="tours.html">Туры</a>
+      <a href="weekly.html">Туры недели</a>
+      <a href="reviews.html">Отзывы</a>
+      <a href="about.html">О нас</a>
+      <a href="contacts.html">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <a href="tel:+74951204580" class="header-phone"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>+7 495 120-45-80</a>
+      <span data-auth-slot></span>
+      <a href="#" class="btn btn-primary" data-modal="booking">Забронировать тур</a>
+    </div>
+  </div>
+</header>
+
+<section class="auth-section">
+  <div class="container">
+    <div class="auth-card">
+      <a href="index.html" class="auth-logo">
+        <span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>
+        Tourline
+      </a>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login" type="button">Вход</button>
+        <button class="auth-tab" data-tab="register" type="button">Регистрация</button>
+      </div>
+
+      <form class="auth-form active" data-form-type="login" novalidate>
+        <h1>С возвращением!</h1>
+        <p>Войдите, чтобы управлять заявками и избранным</p>
+
+        <div class="auth-field">
+          <label>Email</label>
+          <div class="auth-field-input">
+            <svg class="icon-left" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+          </div>
+          <div class="auth-error" data-error="email"></div>
+        </div>
+
+        <div class="auth-field">
+          <label>Пароль</label>
+          <div class="auth-field-input">
+            <svg class="icon-left" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" name="password" placeholder="Ваш пароль" required autocomplete="current-password">
+          </div>
+          <div class="auth-error" data-error="password"></div>
+        </div>
+
+        <div class="auth-row">
+          <label><input type="checkbox" name="remember" checked> Запомнить меня</label>
+          <a href="#" data-forgot>Забыли пароль?</a>
+        </div>
+
+        <button type="submit" class="auth-submit">Войти</button>
+
+        <div class="auth-divider">или</div>
+
+        <div class="auth-social">
+          <button type="button" data-social="google">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+            Google
+          </button>
+          <button type="button" data-social="vk">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 10c0 4 3 6 4 6V8M12 14c1 0 4-2 4-6"/></svg>
+            VK
+          </button>
+        </div>
+        <div class="auth-switch">Нет аккаунта? <a href="#" data-switch-to="register">Создать</a></div>
+      </form>
+
+      <form class="auth-form" data-form-type="register" novalidate>
+        <h1>Создайте аккаунт</h1>
+        <p>Забронируйте первый тур за 2 минуты</p>
+
+        <div class="auth-field">
+          <label>Имя и фамилия</label>
+          <div class="auth-field-input">
+            <svg class="icon-left" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" name="name" placeholder="Иван Иванов" required autocomplete="name">
+          </div>
+          <div class="auth-error" data-error="name"></div>
+        </div>
+
+        <div class="auth-field">
+          <label>Email</label>
+          <div class="auth-field-input">
+            <svg class="icon-left" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+          </div>
+          <div class="auth-error" data-error="email"></div>
+        </div>
+
+        <div class="auth-field">
+          <label>Телефон</label>
+          <div class="auth-field-input">
+            <svg class="icon-left" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+            <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label>Пароль</label>
+          <div class="auth-field-input">
+            <svg class="icon-left" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" name="password" placeholder="Минимум 6 символов" required autocomplete="new-password" minlength="6">
+          </div>
+          <div class="auth-hint">Не менее 6 символов</div>
+          <div class="auth-error" data-error="password"></div>
+        </div>
+
+        <div class="auth-field">
+          <label>Повторите пароль</label>
+          <div class="auth-field-input">
+            <svg class="icon-left" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" name="password2" placeholder="Ещё раз" required autocomplete="new-password">
+          </div>
+          <div class="auth-error" data-error="password2"></div>
+        </div>
+
+        <label class="auth-row" style="justify-content:flex-start;margin-bottom:20px;">
+          <input type="checkbox" name="agree" required>
+          <span>Я согласен с <a href="#">политикой конфиденциальности</a> и обработкой персональных данных</span>
+        </label>
+
+        <button type="submit" class="auth-submit">Зарегистрироваться</button>
+
+        <div class="auth-switch">Уже есть аккаунт? <a href="#" data-switch-to="login">Войти</a></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+        <p>Туристическое агентство полного цикла: подбираем, бронируем и сопровождаем путешествия с 2009 года.</p>
+      </div>
+      <div class="footer-col"><h4>Направления</h4><ul><li><a href="destinations.html">Все направления</a></li><li><a href="destinations.html">Европа</a></li><li><a href="destinations.html">Азия</a></li><li><a href="destinations.html">Острова</a></li><li><a href="tours.html">Все туры</a></li></ul></div>
+      <div class="footer-col"><h4>Компания</h4><ul><li><a href="about.html">О нас</a></li><li><a href="weekly.html">Туры недели</a></li><li><a href="reviews.html">Отзывы</a></li><li><a href="vacancies.html">Вакансии</a></li><li><a href="contacts.html">Контакты</a></li></ul></div>
+      <div class="footer-col"><h4>Помощь</h4><ul><li><a href="help.html#booking">Как забронировать</a></li><li><a href="help.html#payment">Оплата и рассрочка</a></li><li><a href="help.html#return">Возврат и перенос</a></li><li><a href="help.html#insurance">Страховка</a></li><li><a href="faq.html">Частые вопросы</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2025 Tourline · Все права защищены</span><span>Лицензия туроператора РТО 012345 · Москва, ул. Петровка, 26</span><a href="tel:+74951204580">+7 495 120-45-80</a><a href="mailto:hello@tourline.ru">hello@tourline.ru</a></div>
+  </div>
+</footer>
+
+<script src="auth.js"></script>
+<script src="app.js"></script>
+<script>
+(function(){
+  const tabs=document.querySelectorAll('.auth-tab');
+  const forms=document.querySelectorAll('.auth-form');
+  function switchTab(name){
+    tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+    forms.forEach(f=>f.classList.toggle('active',f.dataset.formType===name));
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+  document.querySelectorAll('[data-switch-to]').forEach(a=>{
+    a.addEventListener('click',e=>{e.preventDefault();switchTab(a.dataset.switchTo)});
+  });
+
+  if(typeof getCurrentUser==='function'&&getCurrentUser()){window.location.replace('account.html');return}
+
+  function setError(form,field,msg){
+    const el=form.querySelector(`[data-error="${field}"]`);
+    const input=form.querySelector(`[name="${field}"]`);
+    if(el)el.textContent=msg||'';
+    if(input)input.classList.toggle('error',!!msg);
+  }
+  function clearErrors(form){
+    form.querySelectorAll('.auth-error').forEach(el=>el.textContent='');
+    form.querySelectorAll('input').forEach(i=>i.classList.remove('error'));
+  }
+
+  const loginForm=document.querySelector('[data-form-type="login"]');
+  loginForm.addEventListener('submit',e=>{
+    e.preventDefault();clearErrors(loginForm);
+    const fd=new FormData(loginForm);
+    const email=(fd.get('email')||'').toString().trim();
+    const password=(fd.get('password')||'').toString();
+    if(!email)return setError(loginForm,'email','Введите email');
+    if(!password)return setError(loginForm,'password','Введите пароль');
+    const btn=loginForm.querySelector('.auth-submit');const orig=btn.textContent;btn.disabled=true;btn.textContent='Входим…';
+    setTimeout(()=>{
+      const res=loginUser({email,password});
+      btn.disabled=false;btn.textContent=orig;
+      if(!res.ok){
+        showToast(res.error);
+        if(res.error.includes('email')||res.error.includes('Пользователь'))setError(loginForm,'email',res.error);
+        else setError(loginForm,'password',res.error);
+        return;
+      }
+      showToast('✓ Добро пожаловать, '+res.user.name.split(' ')[0]);
+      setTimeout(()=>location.href='account.html',500);
+    },400);
+  });
+
+  const regForm=document.querySelector('[data-form-type="register"]');
+  regForm.addEventListener('submit',e=>{
+    e.preventDefault();clearErrors(regForm);
+    const fd=new FormData(regForm);
+    const name=(fd.get('name')||'').toString().trim();
+    const email=(fd.get('email')||'').toString().trim();
+    const phone=(fd.get('phone')||'').toString().trim();
+    const password=(fd.get('password')||'').toString();
+    const password2=(fd.get('password2')||'').toString();
+    const agree=regForm.querySelector('[name="agree"]').checked;
+    let ok=true;
+    if(!name){setError(regForm,'name','Введите имя');ok=false}
+    else if(name.length<2){setError(regForm,'name','Слишком короткое имя');ok=false}
+    const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!email){setError(regForm,'email','Введите email');ok=false}
+    else if(!emailRe.test(email)){setError(regForm,'email','Некорректный email');ok=false}
+    if(!password){setError(regForm,'password','Введите пароль');ok=false}
+    else if(password.length<6){setError(regForm,'password','Минимум 6 символов');ok=false}
+    if(!password2){setError(regForm,'password2','Повторите пароль');ok=false}
+    else if(password!==password2){setError(regForm,'password2','Пароли не совпадают');ok=false}
+    if(!agree){showToast('Подтвердите согласие с политикой');ok=false}
+    if(!ok)return;
+    const btn=regForm.querySelector('.auth-submit');const orig=btn.textContent;btn.disabled=true;btn.textContent='Создаём аккаунт…';
+    setTimeout(()=>{
+      const res=registerUser({name,email,phone,password});
+      btn.disabled=false;btn.textContent=orig;
+      if(!res.ok){showToast(res.error);setError(regForm,'email',res.error);return}
+      showToast('✓ Аккаунт создан!');
+      setTimeout(()=>location.href='account.html',500);
+    },500);
+  });
+
+  document.querySelectorAll('[data-social]').forEach(b=>b.addEventListener('click',()=>showToast('Вход через соцсети скоро появится')));
+  document.querySelectorAll('[data-forgot]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showToast('Напишите на hello@tourline.ru — восстановим доступ')}));
+})();
+</script>
+</body>
+</html>

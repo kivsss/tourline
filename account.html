@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Личный кабинет — Tourline</title>
+<script>
+  (function(){var t=localStorage.getItem('tl-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+    <button class="burger"><span></span></button>
+    <nav class="nav">
+      <a href="destinations.html">Направления</a>
+      <a href="tours.html">Туры</a>
+      <a href="weekly.html">Туры недели</a>
+      <a href="reviews.html">Отзывы</a>
+      <a href="about.html">О нас</a>
+      <a href="contacts.html">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <a href="tel:+74951204580" class="header-phone"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>+7 495 120-45-80</a>
+      <span data-auth-slot></span>
+      <a href="#" class="btn btn-primary" data-modal="booking">Забронировать тур</a>
+    </div>
+  </div>
+</header>
+
+<section class="account-header">
+  <div class="container">
+    <h1 id="welcome-name">Личный кабинет</h1>
+    <p>Управляйте заявками, избранным и настройками профиля</p>
+  </div>
+</section>
+
+<section class="section section-cream" style="padding-top:0;">
+  <div class="container">
+
+    <div class="account-tabs">
+      <button class="account-tab active" data-pane="profile" type="button">Профиль</button>
+      <button class="account-tab" data-pane="bookings" type="button">Мои заявки</button>
+      <button class="account-tab" data-pane="favorites" type="button">Избранное</button>
+      <button class="account-tab" data-pane="settings" type="button">Настройки</button>
+    </div>
+
+    <div class="account-pane active" data-pane-content="profile">
+      <div class="profile-grid">
+        <div class="profile-side">
+          <div class="profile-avatar-big" id="profile-avatar">И</div>
+          <h3 id="profile-name">Имя Фамилия</h3>
+          <p class="profile-email" id="profile-email">email@example.com</p>
+          <div class="profile-meta">
+            <div><span>Телефон</span><strong id="profile-phone">—</strong></div>
+            <div><span>Аккаунт создан</span><strong id="profile-created">—</strong></div>
+            <div><span>Заявок</span><strong id="profile-bookings-count">0</strong></div>
+          </div>
+        </div>
+
+        <form class="profile-form" id="profile-form">
+          <h3>Редактировать профиль</h3>
+          <div class="auth-field">
+            <label>Имя и фамилия</label>
+            <div class="auth-field-input">
+              <svg class="icon-left" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" name="name" required>
+            </div>
+          </div>
+          <div class="auth-field">
+            <label>Email (нельзя изменить)</label>
+            <div class="auth-field-input">
+              <svg class="icon-left" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" name="email" disabled style="opacity:.6;cursor:not-allowed;">
+            </div>
+          </div>
+          <div class="auth-field">
+            <label>Телефон</label>
+            <div class="auth-field-input">
+              <svg class="icon-left" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+              <input type="tel" name="phone" placeholder="+7 (___) ___-__-__">
+            </div>
+          </div>
+          <button type="submit" class="auth-submit">Сохранить изменения</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="account-pane" data-pane-content="bookings">
+      <div id="bookings-container"></div>
+    </div>
+
+    <div class="account-pane" data-pane-content="favorites">
+      <div id="favorites-container"></div>
+    </div>
+
+    <div class="account-pane" data-pane-content="settings">
+      <div class="profile-form" style="max-width:600px;">
+        <h3>Сменить пароль</h3>
+        <form id="password-form">
+          <div class="auth-field">
+            <label>Новый пароль</label>
+            <div class="auth-field-input">
+              <svg class="icon-left" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" name="password" placeholder="Минимум 6 символов" required minlength="6">
+            </div>
+          </div>
+          <div class="auth-field">
+            <label>Повторите пароль</label>
+            <div class="auth-field-input">
+              <svg class="icon-left" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" name="password2" required minlength="6">
+            </div>
+          </div>
+          <button type="submit" class="auth-submit">Обновить пароль</button>
+        </form>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:32px 0;">
+
+        <h3>Опасная зона</h3>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;">После удаления аккаунта все заявки и настройки будут потеряны безвозвратно.</p>
+        <button type="button" class="btn btn-outline" data-delete-account style="border-color:#B85C58;color:#B85C58;">Удалить аккаунт</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span>Tourline</a>
+        <p>Туристическое агентство полного цикла: подбираем, бронируем и сопровождаем путешествия с 2009 года.</p>
+      </div>
+      <div class="footer-col"><h4>Направления</h4><ul><li><a href="destinations.html">Все направления</a></li><li><a href="destinations.html">Европа</a></li><li><a href="destinations.html">Азия</a></li><li><a href="destinations.html">Острова</a></li><li><a href="tours.html">Все туры</a></li></ul></div>
+      <div class="footer-col"><h4>Компания</h4><ul><li><a href="about.html">О нас</a></li><li><a href="weekly.html">Туры недели</a></li><li><a href="reviews.html">Отзывы</a></li><li><a href="vacancies.html">Вакансии</a></li><li><a href="contacts.html">Контакты</a></li></ul></div>
+      <div class="footer-col"><h4>Помощь</h4><ul><li><a href="help.html#booking">Как забронировать</a></li><li><a href="help.html#payment">Оплата и рассрочка</a></li><li><a href="help.html#return">Возврат и перенос</a></li><li><a href="help.html#insurance">Страховка</a></li><li><a href="faq.html">Частые вопросы</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2025 Tourline · Все права защищены</span><span>Лицензия туроператора РТО 012345 · Москва, ул. Петровка, 26</span><a href="tel:+74951204580">+7 495 120-45-80</a><a href="mailto:hello@tourline.ru">hello@tourline.ru</a></div>
+  </div>
+</footer>
+<script>
+  // Если зашёл администратор — сразу в админ-панель
+  (function () {
+    try {
+      var raw = localStorage.getItem('tl-current-user');
+      if (raw) {
+        var u = JSON.parse(raw);
+        if (u && u.role === 'admin') {
+          window.location.replace('admin.html');
+        }
+      }
+    } catch (e) {}
+  })();
+</script>
+<script src="tours-data.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script>
+<script>
+(function(){
+  const user=getCurrentUser();
+  if(!user){location.replace('auth.html');return}
+  const users=getUsers();
+  const fullUser=users.find(u=>u.id===user.id)||user;
+
+  document.getElementById('welcome-name').textContent='Здравствуйте, '+(user.name.split(' ')[0]||'гость')+'!';
+  document.getElementById('profile-avatar').textContent=userInitials(user.name);
+  document.getElementById('profile-name').textContent=user.name;
+  document.getElementById('profile-email').textContent=user.email;
+  document.getElementById('profile-phone').textContent=user.phone||'—';
+
+  const pf=document.getElementById('profile-form');
+  pf.elements.name.value=user.name;
+  pf.elements.email.value=user.email;
+  pf.elements.phone.value=user.phone||'';
+
+  if(fullUser.createdAt){
+    const d=new Date(fullUser.createdAt);
+    document.getElementById('profile-created').textContent=d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+  }
+
+  const bookings=getBookings().filter(b=>b.userId===user.id);
+  document.getElementById('profile-bookings-count').textContent=bookings.length;
+  renderBookings(bookings);
+
+  const favs=getFavorites().filter(f=>f.userId===user.id);
+  renderFavorites(favs);
+
+  pf.addEventListener('submit',e=>{
+    e.preventDefault();
+    const res=updateProfile({name:pf.elements.name.value,phone:pf.elements.phone.value});
+    if(res.ok){showToast('✓ Профиль обновлён');setTimeout(()=>location.reload(),500)}
+    else showToast('Не удалось обновить профиль');
+  });
+
+  document.getElementById('password-form').addEventListener('submit',e=>{
+    e.preventDefault();
+    const f=e.target;const p1=f.elements.password.value;const p2=f.elements.password2.value;
+    if(p1.length<6)return showToast('Пароль минимум 6 символов');
+    if(p1!==p2)return showToast('Пароли не совпадают');
+    updateProfile({password:p1});f.reset();showToast('✓ Пароль обновлён');
+  });
+
+  document.querySelector('[data-delete-account]').addEventListener('click',()=>{
+    if(!confirm('Точно удалить аккаунт? Действие необратимо.'))return;
+    saveUsers(getUsers().filter(u=>u.id!==user.id));
+    saveBookings(getBookings().filter(b=>b.userId!==user.id));
+    saveFavorites(getFavorites().filter(f=>f.userId!==user.id));
+    logoutUser();showToast('Аккаунт удалён');
+    setTimeout(()=>location.href='index.html',800);
+  });
+
+  const tabs=document.querySelectorAll('.account-tab');
+  const panes=document.querySelectorAll('.account-pane');
+  function switchPane(name){
+    tabs.forEach(t=>t.classList.toggle('active',t.dataset.pane===name));
+    panes.forEach(p=>p.classList.toggle('active',p.dataset.paneContent===name));
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>{switchPane(t.dataset.pane);history.replaceState(null,'','#'+t.dataset.pane)}));
+  if(location.hash){const name=location.hash.slice(1);if([...tabs].some(t=>t.dataset.pane===name))switchPane(name)}
+
+  function renderBookings(list){
+    const c=document.getElementById('bookings-container');
+    if(!list.length){c.innerHTML=`<div class="empty-pane"><div class="empty-icon"><svg viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><h3>Заявок пока нет</h3><p>Выберите направление и оставьте первую заявку.</p><a href="destinations.html" class="btn btn-primary">Смотреть направления</a></div>`;return}
+    c.innerHTML='<div class="bookings-list">'+list.map(b=>`<div class="booking-item"><div class="booking-item-info"><h4>${escapeHtml(b.tourTitle||'Тур')}</h4><p>${escapeHtml(b.dates||'Даты уточняются')} · ${escapeHtml(b.guests||'2 гостя')}</p></div><span class="booking-item-status ${b.status==='pending'?'pending':b.status==='cancelled'?'cancelled':''}">${b.status==='pending'?'Ждёт подтверждения':b.status==='cancelled'?'Отменена':'Подтверждена'}</span></div>`).join('')+'</div>';
+  }
+
+  function renderFavorites(list){
+    const c=document.getElementById('favorites-container');
+    if(!list.length){c.innerHTML=`<div class="empty-pane"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div><h3>Избранного пока нет</h3><p>Нажимайте ♡ на карточках туров, чтобы сохранять их.</p><a href="destinations.html" class="btn btn-primary">Смотреть туры</a></div>`;return}
+    c.innerHTML='<div class="fav-grid">'+list.map(f=>`<a href="tour.html?id=${f.tourId}" class="tour-card"><div class="tour-card-img"><img src="${f.image}" alt="${escapeHtml(f.tourTitle)}" loading="lazy"></div><div class="tour-card-body"><div class="tour-card-top"><h4>${escapeHtml(f.tourTitle)}</h4></div><p class="tour-card-desc">${escapeHtml(f.shortDesc||'')}</p><div class="tour-card-price"><strong>от ${f.price?f.price.toLocaleString('ru-RU')+' ₽':'—'}</strong><span>→</span></div></div></a>`).join('')+'</div>';
+  }
+})();
+</script>
+</body>
+</html>
