@@ -2,7 +2,9 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FDFBF7">
+<meta name="theme-color" content="#0D1210" media="(prefers-color-scheme: dark)">
 <title>Tourline — Туристическое агентство</title>
 <script>
   (function(){var t=localStorage.getItem('tl-theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
@@ -43,20 +45,212 @@
 
       <form class="search-form" data-form="search">
         <div class="search-field">
-          <label>Откуда</label>
-          <select name="from"><option>Москва</option><option>Санкт-Петербург</option><option>Казань</option><option>Екатеринбург</option><option>Новосибирск</option><option>Краснодар</option><option>Сочи</option></select>
-        </div>
+  <label>Откуда</label>
+  <div class="custom-select" data-select-name="from">
+    <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+      <span class="custom-select-value">Москва</span>
+      <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="custom-select-dropdown" role="listbox">
+      <div class="custom-select-option active" data-value="Москва">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        Москва
+      </div>
+      <div class="custom-select-option" data-value="Санкт-Петербург">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        Санкт-Петербург
+      </div>
+      <div class="custom-select-option" data-value="Казань">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        Казань
+      </div>
+      <div class="custom-select-option" data-value="Екатеринбург">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        Екатеринбург
+      </div>
+      <div class="custom-select-option" data-value="Новосибирск">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        Новосибирск
+      </div>
+      <div class="custom-select-option" data-value="Краснодар">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        Краснодар
+      </div>
+    </div>
+    <input type="hidden" name="from" value="Москва">
+  </div>
+</div>
         <div class="search-field">
-          <label>Направление</label>
-          <input type="text" name="dest" placeholder="Италия, Тоскана, Киото…" list="dest-list" autocomplete="off">
-          <datalist id="dest-list">
-            <option value="Тоскана"></option><option value="Санторини"></option><option value="Мадейра"></option><option value="Киото"></option><option value="Рим"></option><option value="Прованс"></option><option value="Лофотены"></option><option value="Амстердам"></option><option value="Мальдивы"></option><option value="Дубай"></option>
-          </datalist>
+  <label>Направление</label>
+  <div class="custom-select custom-select--search" data-select-name="dest">
+    <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+      <span class="custom-select-value placeholder">Куда хотите?</span>
+      <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="custom-select-dropdown" role="listbox">
+      <div class="custom-select-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="text" placeholder="Поиск направления…" data-select-search>
+      </div>
+      <div class="custom-select-list" data-select-list>
+        <div class="custom-select-option" data-value="Тоскана" data-tags="италия тоскана флоренция">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Тоскана
         </div>
-        <div class="search-field">
-          <label>Даты</label>
-          <select name="dates"><option>Любые даты</option><option>Май 2026</option><option>Июнь 2026</option><option>Июль 2026</option><option>Август 2026</option><option>Сентябрь 2026</option><option>Декабрь 2026</option></select>
+        <div class="custom-select-option" data-value="Санторини" data-tags="греция санторини эгейское">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Санторини
         </div>
+        <div class="custom-select-option" data-value="Мадейра" data-tags="португалия мадейра фуншал">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Мадейра
+        </div>
+        <div class="custom-select-option" data-value="Киото" data-tags="япония киото храмы сакура">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Киото
+        </div>
+        <div class="custom-select-option" data-value="Рим" data-tags="италия рим ватикан колизей">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Рим
+        </div>
+        <div class="custom-select-option" data-value="Прованс" data-tags="франция прованс лаванда">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Прованс
+        </div>
+        <div class="custom-select-option" data-value="Лофотены" data-tags="норвегия лофотены фьорды">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Лофотены
+        </div>
+        <div class="custom-select-option" data-value="Амстердам" data-tags="нидерланды амстердам каналы тюльпаны">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Амстердам
+        </div>
+        <div class="custom-select-option" data-value="Марокко" data-tags="марокко сахара марракеш">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Марокко
+        </div>
+        <div class="custom-select-option" data-value="Хорватия" data-tags="хорватия дубровник адриатика">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Хорватия
+        </div>
+        <div class="custom-select-option" data-value="Дубай" data-tags="оаэ дубай эмираты">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Дубай
+        </div>
+        <div class="custom-select-option" data-value="Мальдивы" data-tags="мальдивы острова океан">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Мальдивы
+        </div>
+        <div class="custom-select-option" data-value="Бали" data-tags="индонезия бали храмы">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Бали
+        </div>
+        <div class="custom-select-option" data-value="Грузия" data-tags="грузия тбилиси кахетия">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Грузия
+        </div>
+        <div class="custom-select-option" data-value="Исландия" data-tags="исландия гейзеры водопады">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Исландия
+        </div>
+        <div class="custom-select-empty" data-select-empty style="display:none;">
+          Ничего не найдено
+        </div>
+      </div>
+    </div>
+    <input type="hidden" name="dest" value="">
+  </div>
+</div>
+      <div class="search-field">
+  <label>Даты</label>
+  <div class="datepicker" data-datepicker>
+    <button type="button" class="datepicker-trigger" aria-haspopup="dialog" aria-expanded="false">
+      <span class="datepicker-value">Любые даты</span>
+      <svg class="datepicker-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+
+    <div class="datepicker-dropdown" role="dialog">
+      <div class="datepicker-header">
+        <button type="button" class="datepicker-nav" data-dp-prev aria-label="Предыдущий месяц">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <div class="datepicker-month" data-dp-month>Январь 2026</div>
+        <button type="button" class="datepicker-nav" data-dp-next aria-label="Следующий месяц">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="datepicker-weekdays">
+        <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+      </div>
+
+      <div class="datepicker-grid" data-dp-grid></div>
+
+      <div class="datepicker-footer">
+        <button type="button" class="datepicker-btn datepicker-btn--clear" data-dp-clear>Сбросить</button>
+        <button type="button" class="datepicker-btn datepicker-btn--apply" data-dp-apply>Применить</button>
+      </div>
+    </div>
+
+    <input type="hidden" name="dates" value="" data-dp-value>
+    <input type="hidden" name="dateFrom" value="" data-dp-from>
+    <input type="hidden" name="dateTo" value="" data-dp-to>
+  </div>
+</div>
         <button type="submit" class="btn btn-primary"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Найти тур</button>
       </form>
 

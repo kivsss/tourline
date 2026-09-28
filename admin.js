@@ -23,20 +23,60 @@
     adminProfile: 'tl-admin-profile',
     log: 'tl-admin-log'
   };
+/* ============================================================
+   ВАЛЮТЫ
+============================================================ */
+const CURRENCIES = {
+  RUB: { code: 'RUB', symbol: '₽', label: 'российский рубль', rate: 1 },
+  USD: { code: 'USD', symbol: '$', label: 'доллар США',       rate: 0.011 },  // 1 ₽ ≈ 0.011 $
+  EUR: { code: 'EUR', symbol: '€', label: 'евро',             rate: 0.010 }   // 1 ₽ ≈ 0.010 €
+};
 
+/* Базовая валюта хранения — рубли */
+const BASE_CURRENCY = 'RUB';
+
+/* Возвращает объект текущей валюты */
+function getCurrency() {
+  const s = load(KEYS.settings, {});
+  return CURRENCIES[s.currency] || CURRENCIES.RUB;
+}
+
+/* Символ валюты (₽ / $ / €) */
+function getCurrencySymbol() {
+  return getCurrency().symbol;
+}
+
+/* Форматирует число с учётом валюты */
+function formatMoney(amountInBase) {
+  const cur = getCurrency();
+  const value = Math.round((amountInBase || 0) * cur.rate);
+  return value.toLocaleString('ru-RU') + ' ' + cur.symbol;
+}
+
+/* Форматирует число БЕЗ символа (для случаев, где символ уже в шаблоне) */
+function formatMoneyNumber(amountInBase) {
+  const cur = getCurrency();
+  return Math.round((amountInBase || 0) * cur.rate).toLocaleString('ru-RU');
+}
   const ADMIN_LOGIN = 'admin';
   const ADMIN_PASSWORD = 'tourline2025';
 
   /* ============================================================
      ХЕЛПЕРЫ
   ============================================================ */
-  function load(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return fallback;
-      return JSON.parse(raw);
-    } catch (e) { return fallback; }
-  }
+  /**
+ * Читает значение из localStorage
+ * @param {string} key
+ * @param {any} fallback
+ * @returns {any}
+ */
+function load(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    return JSON.parse(raw);
+  } catch (e) { return fallback; }
+}
   function save(key, value) {
     try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
   }
@@ -49,9 +89,9 @@
   function initials(n) {
     return (n || '').trim().split(/\s+/).map(w => w[0] || '').slice(0, 2).join('').toUpperCase();
   }
-  function fmtMoney(n) {
-    return Number(n || 0).toLocaleString('ru-RU');
-  }
+ function fmtMoney(n) {
+  return formatMoney(n);
+}
 
   /* ============================================================
      АВТОРИЗАЦИЯ
@@ -94,6 +134,10 @@
     initFilterChips();
     initRowActions();
     initPhotoUploaders();
+    initNotifications(); 
+    initSalesPeriodSelect();
+    updateAllMoneyDisplays(); 
+    initAdminAvatar();
 
     renderAll();
 
@@ -264,7 +308,7 @@
         <td><span class="cell-id">${escapeHtml(b.num)}</span></td>
         <td>${escapeHtml(b.client)}</td>
         <td>${escapeHtml(b.tour)}</td>
-        <td><strong>€ ${fmtMoney(b.amount)}</strong></td>
+        <td><strong>${fmtMoney(b.amount)}</strong></td>
         <td>${statusBadge(b.status)}</td>
       </tr>
     `).join('');
@@ -300,28 +344,69 @@
   }
 
   function renderPendingBookings() {
-    const wrap = document.getElementById('pending-bookings');
-    if (!wrap) return;
-    const pending = load(KEYS.bookings, []).filter(b => b.status === 'pending').slice(0, 3);
-    if (!pending.length) {
-      wrap.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:14px;">Все заявки обработаны ✓</div>`;
-      return;
-    }
-    wrap.innerHTML = pending.map(b => `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);gap:12px;">
-        <div>
-          <div style="font-weight:500;font-size:14px;color:var(--text);">${escapeHtml(b.num)} · ${escapeHtml(b.client)}</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${escapeHtml(b.tour)} · € ${fmtMoney(b.amount)}</div>
-        </div>
-        <button class="btn btn-primary btn-sm" data-approve="${b.id}">Подтвердить</button>
-      </div>
-    `).join('');
+  const wrap = document.getElementById('pending-bookings');
+  if (!wrap) return;
 
-    wrap.querySelectorAll('[data-approve]').forEach(btn => {
-      btn.addEventListener('click', () => approveBooking(btn.dataset.approve));
-    });
+  const pending = load(KEYS.bookings, []).filter(b => b.status === 'pending').slice(0, 5);
+
+  if (!pending.length) {
+    wrap.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:14px;">Все заявки обработаны ✓</div>`;
+    return;
   }
 
+  wrap.innerHTML = pending.map(b => `
+    <div class="pending-item" data-pending-id="${b.id}">
+      <div class="pending-info">
+        <div class="pending-title">
+          <span class="pending-num">${escapeHtml(b.num)}</span>
+          <span class="pending-sep">·</span>
+          <span>${escapeHtml(b.client)}</span>
+        </div>
+        <div class="pending-meta">
+          ${escapeHtml(b.tour)} · ${fmtMoney(b.amount)}
+        </div>
+      </div>
+      <div class="pending-actions">
+        <button type="button" class="btn btn-outline btn-sm" data-view="${b.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Просмотреть
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" data-approve="${b.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Подтвердить
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  // Кнопка «Подтвердить»
+  wrap.querySelectorAll('[data-approve]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      approveBooking(btn.dataset.approve);
+    });
+  });
+
+  // Кнопка «Просмотреть»
+  wrap.querySelectorAll('[data-view]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      viewBooking(btn.dataset.view);
+    });
+  });
+
+  // Клик по всей строке — открывает просмотр
+  wrap.querySelectorAll('[data-pending-id]').forEach(row => {
+    row.addEventListener('click', () => {
+      viewBooking(row.dataset.pendingId);
+    });
+  });
+}
   /* ============================================================
      ТУРЫ
   ============================================================ */
@@ -359,7 +444,7 @@
   </div>
 </td>
         <td>${escapeHtml(t.dates || '—')}</td>
-        <td><strong>€ ${fmtMoney(t.price)}</strong></td>
+        <td><strong>${fmtMoney(t.price)}</strong></td>
         <td>${escapeHtml(t.spots || '—')}</td>
         <td>${statusBadge(t.status)}</td>
         <td>
@@ -450,7 +535,7 @@
         <td><strong>${escapeHtml(b.client)}</strong></td>
         <td>${escapeHtml(b.tour)}</td>
         <td>${escapeHtml(b.date)}</td>
-        <td><strong>€ ${fmtMoney(b.amount)}</strong></td>
+        <td><strong>${fmtMoney(b.amount)}</strong></td>
         <td>${statusBadge(b.status)}</td>
         <td>
           <div class="row-actions">
@@ -510,7 +595,7 @@
     </div>
     <div class="modal-info-row">
       <span class="label">Сумма</span>
-      <span class="value value--big">€ ${fmtMoney(b.amount)}</span>
+      <span class="value value--big">${fmtMoney(b.amount)}</span>
     </div>
     <div class="modal-info-row">
       <span class="label">Статус</span>
@@ -807,70 +892,166 @@
   /* ============================================================
      НАСТРОЙКИ
   ============================================================ */
-  function loadSettingsIntoForms() {
+ function loadSettingsIntoForms() {
+  const s = load(KEYS.settings, {});
+  const p = load(KEYS.adminProfile, {});
+
+  setVal('agency-name', s.agencyName);
+  setVal('agency-city', s.agencyCity);
+  setVal('agency-phone', s.agencyPhone);
+  setVal('agency-email', s.agencyEmail);
+  setVal('payment-currency', s.currency);
+
+  setVal('admin-name', p.name);
+  setVal('admin-email', p.email);
+  setVal('admin-role', p.role);
+  setVal('admin-phone', p.phone);
+
+  const toggleMap = {
+    'card-payments': 'cardPayments',
+    'auto-confirm': 'autoConfirm',
+    'email-notify': 'emailNotify',
+    'metrica': 'metrica',
+    'ga': 'ga',
+    'telegram': 'telegram',
+    'notif-booking': 'notifBooking',
+    'notif-payment': 'notifPayment',
+    'notif-review': 'notifReview'
+  };
+
+  document.querySelectorAll('[data-toggle]').forEach(t => {
+    const settingKey = toggleMap[t.dataset.toggle];
+    if (settingKey && s[settingKey] !== undefined) {
+      t.classList.toggle('on', !!s[settingKey]);
+    }
+  });
+}
+
+function setVal(id, v) {
+  const el = document.getElementById(id);
+  if (el && v !== undefined) el.value = v;
+}
+
+function initProfileSave() {
+  const btn = document.getElementById('admin-save');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const profile = load(KEYS.adminProfile, {}) || {};
+    profile.name = (document.getElementById('admin-name')?.value || '').trim() || 'Администратор';
+    profile.email = (document.getElementById('admin-email')?.value || '').trim();
+    profile.role = (document.getElementById('admin-role')?.value || '').trim();
+    profile.phone = (document.getElementById('admin-phone')?.value || '').trim();
+
+    const newPass = document.getElementById('admin-password')?.value;
+    if (newPass && newPass.length >= 6) profile.password = newPass;
+
+    save(KEYS.adminProfile, profile);
+
+    const current = load(KEYS.current, null);
+    if (current && current.role === 'admin') {
+      current.name = profile.name;
+      current.email = profile.email;
+      save(KEYS.current, current);
+    }
+
+    updateTopbarUser();
+    addLog('Обновлён профиль администратора');
+    showToast('✓ Профиль сохранён');
+
+    const passInput = document.getElementById('admin-password');
+    if (passInput) passInput.value = '';
+  });
+}
+
+ function initSettingsSave() {
+  // ====== 1. Автосохранение селекта валюты ======
+  const currencySelect = document.getElementById('payment-currency');
+  if (currencySelect) {
+    // Загружаем текущее значение при инициализации
     const s = load(KEYS.settings, {});
-    const p = load(KEYS.adminProfile, {});
+    if (s.currency) currencySelect.value = s.currency;
 
-    setVal('agency-name', s.agencyName);
-    setVal('agency-city', s.agencyCity);
-    setVal('agency-phone', s.agencyPhone);
-    setVal('agency-email', s.agencyEmail);
-    setVal('payment-currency', s.currency);
+    // Сохраняем при изменении
+    currencySelect.addEventListener('change', () => {
+  const settings = load(KEYS.settings, {});
+  settings.currency = currencySelect.value;
+  save(KEYS.settings, settings);
+  addLog('Изменена валюта: ' + currencySelect.value);
+  showToast('✓ Валюта изменена на ' + getCurrency().label);
 
-    setVal('admin-name', p.name);
-    setVal('admin-email', p.email);
-    setVal('admin-role', p.role);
-    setVal('admin-phone', p.phone);
-
-    document.querySelectorAll('[data-toggle]').forEach(t => {
-      const key = t.dataset.toggle;
-      const map = {
-        'card-payments': 'cardPayments', 'auto-confirm': 'autoConfirm', 'email-notify': 'emailNotify',
-        'metrica': 'metrica', 'ga': 'ga', 'telegram': 'telegram',
-        'notif-booking': 'notifBooking', 'notif-payment': 'notifPayment', 'notif-review': 'notifReview'
-      };
-      const settingKey = map[key];
-      if (settingKey && s[settingKey] !== undefined) {
-        t.classList.toggle('on', !!s[settingKey]);
-      }
-    });
+  // Обновляем все числа во всей админке
+  updateAllMoneyDisplays();
+});
   }
 
-  function setVal(id, v) {
+  // ====== 2. Автосохранение полей "Профиль агентства" ======
+  const agencyFields = [
+    { id: 'agency-name', key: 'agencyName' },
+    { id: 'agency-city', key: 'agencyCity' },
+    { id: 'agency-phone', key: 'agencyPhone' },
+    { id: 'agency-email', key: 'agencyEmail' }
+  ];
+
+  agencyFields.forEach(({ id, key }) => {
     const el = document.getElementById(id);
-    if (el && v !== undefined) el.value = v;
-  }
+    if (!el) return;
 
-  function initProfileSave() {
-    const btn = document.getElementById('admin-save');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      const profile = load(KEYS.adminProfile, {});
-      profile.name = (document.getElementById('admin-name')?.value || '').trim() || 'Администратор';
-      profile.email = (document.getElementById('admin-email')?.value || '').trim();
-      profile.role = (document.getElementById('admin-role')?.value || '').trim();
-      profile.phone = (document.getElementById('admin-phone')?.value || '').trim();
-      const newPass = document.getElementById('admin-password')?.value;
-      if (newPass && newPass.length >= 6) profile.password = newPass;
-      save(KEYS.adminProfile, profile);
+    // Загружаем текущее значение
+    const s = load(KEYS.settings, {});
+    if (s[key]) el.value = s[key];
 
-      const current = load(KEYS.current, null);
-      if (current && current.role === 'admin') {
-        current.name = profile.name;
-        current.email = profile.email;
-        save(KEYS.current, current);
-      }
-      updateTopbarUser();
-      addLog('Обновлён профиль администратора');
-      showToast('✓ Профиль сохранён');
-      const passInput = document.getElementById('admin-password');
-      if (passInput) passInput.value = '';
+    // Debounce — сохраняем через 600 мс после окончания ввода
+    let timer = null;
+    el.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const settings = load(KEYS.settings, {});
+        settings[key] = el.value.trim();
+        save(KEYS.settings, settings);
+      }, 600);
     });
-  }
 
-  function initSettingsSave() {
-    const btn = document.getElementById('settings-save');
-    if (!btn) return;
+    // При потере фокуса — сохраняем сразу
+    el.addEventListener('blur', () => {
+      clearTimeout(timer);
+      const settings = load(KEYS.settings, {});
+      settings[key] = el.value.trim();
+      save(KEYS.settings, settings);
+    });
+  });
+
+  // ====== 3. Автосохранение профиля администратора ======
+  const adminFields = [
+    { id: 'admin-name', key: 'name' },
+    { id: 'admin-email', key: 'email' },
+    { id: 'admin-role', key: 'role' },
+    { id: 'admin-phone', key: 'phone' }
+  ];
+
+  adminFields.forEach(({ id, key }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const p = load(KEYS.adminProfile, {});
+    if (p[key]) el.value = p[key];
+
+    let timer = null;
+    el.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const profile = load(KEYS.adminProfile, {});
+        profile[key] = el.value.trim();
+        save(KEYS.adminProfile, profile);
+        // Обновляем имя в топбаре сразу
+        if (key === 'name') updateTopbarUser();
+      }, 600);
+    });
+  });
+
+  // ====== 4. Кнопка "Сохранить" (осталась на всякий случай) ======
+  const btn = document.getElementById('settings-save');
+  if (btn) {
     btn.addEventListener('click', () => {
       const s = load(KEYS.settings, {});
       s.agencyName = document.getElementById('agency-name')?.value || s.agencyName;
@@ -882,13 +1063,17 @@
       addLog('Изменены настройки агентства');
       showToast('✓ Настройки сохранены');
     });
+  }
 
-    const reset = document.getElementById('settings-reset');
-    if (reset) reset.addEventListener('click', () => {
+  // ====== 5. Кнопка "Отменить" — возвращает сохранённые значения ======
+  const reset = document.getElementById('settings-reset');
+  if (reset) {
+    reset.addEventListener('click', () => {
       loadSettingsIntoForms();
       showToast('Изменения отменены');
     });
   }
+}
 
   function updateTopbarUser() {
     const current = load(KEYS.current, null);
@@ -1014,7 +1199,7 @@
         bookings.unshift({
           id: uid('b'), num,
           client: fd.get('client'), phone: fd.get('phone'),
-          tour: fd.get('tour'), date: formatDate(fd.get('date')),
+          tour: fd.get('tour'),  date: formatDate(fd.get('date') || fd.get('dateFrom')),
           amount: Number(fd.get('amount')), status: fd.get('status')
         });
         save(KEYS.bookings, bookings);
@@ -1111,26 +1296,42 @@ tours[idx].image = imgVal;
   /* ============================================================
      ПЕРЕКЛЮЧАТЕЛИ
   ============================================================ */
-  function initToggles() {
-    document.querySelectorAll('[data-toggle]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.classList.toggle('on');
-        const key = btn.dataset.toggle;
-        const map = {
-          'card-payments': 'cardPayments', 'auto-confirm': 'autoConfirm', 'email-notify': 'emailNotify',
-          'metrica': 'metrica', 'ga': 'ga', 'telegram': 'telegram',
-          'notif-booking': 'notifBooking', 'notif-payment': 'notifPayment', 'notif-review': 'notifReview'
-        };
-        const settingKey = map[key];
-        if (settingKey) {
-          const s = load(KEYS.settings, {});
-          s[settingKey] = btn.classList.contains('on');
-          save(KEYS.settings, s);
-          addLog(`Изменён параметр: ${key} → ${s[settingKey] ? 'вкл' : 'выкл'}`);
-        }
-      });
+function initToggles() {
+  // Единый маппинг ключей из data-toggle в объект settings
+  const TOGGLE_MAP = {
+    'card-payments': 'cardPayments',
+    'auto-confirm': 'autoConfirm',
+    'email-notify': 'emailNotify',
+    'metrica': 'metrica',
+    'ga': 'ga',
+    'telegram': 'telegram',
+    'notif-booking': 'notifBooking',
+    'notif-payment': 'notifPayment',
+    'notif-review': 'notifReview'
+  };
+
+  document.querySelectorAll('[data-toggle]').forEach(btn => {
+    const key = btn.dataset.toggle;
+    const settingKey = TOGGLE_MAP[key];
+    if (!settingKey) return;
+
+    // Загрузка текущего состояния из localStorage
+    const settings = load(KEYS.settings, {});
+    if (settings[settingKey] !== undefined) {
+      btn.classList.toggle('on', !!settings[settingKey]);
+    }
+
+    // Обновление обработчика — сохраняем сразу
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('on');
+      const s = load(KEYS.settings, {});
+      s[settingKey] = btn.classList.contains('on');
+      save(KEYS.settings, s);
+      addLog(`Изменён параметр: ${key} → ${s[settingKey] ? 'вкл' : 'выкл'}`);
+      showToast('✓ Настройка сохранена');
     });
-  }
+  });
+}
 
   /* ============================================================
      ПОИСК И ФИЛЬТРЫ
@@ -1374,20 +1575,32 @@ tours[idx].image = imgVal;
   /* ============================================================
      МОБИЛЬНОЕ МЕНЮ
   ============================================================ */
-  function initMobileMenu() {
-    const btn = document.getElementById('mobile-menu-btn');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    if (!btn || !sidebar) return;
-    btn.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-      overlay?.classList.toggle('show');
+ function initMobileMenu() {
+  const btn = document.getElementById('mobile-menu-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (!btn || !sidebar) return;
+
+  btn.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay?.classList.toggle('show');
+  });
+
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  // Закрытие при выборе пункта
+  sidebar.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        sidebar.classList.remove('open');
+        overlay?.classList.remove('show');
+      }
     });
-    overlay?.addEventListener('click', () => {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('show');
-    });
-  }
+  });
+}
 
   /* ============================================================
      ТЕМА
@@ -1598,4 +1811,501 @@ function fillUploader(selector, imageUrl) {
   if (!uploader || !uploader._setImage) return;
   uploader._setImage(imageUrl || null);
 }
+/* ============================================================
+   УВЕДОМЛЕНИЯ АДМИНА
+============================================================ */
+const NOTIF_KEY = 'tl-notifications';
+
+function loadNotifs() {
+  try { return JSON.parse(localStorage.getItem(NOTIF_KEY)) || []; }
+  catch (e) { return []; }
+}
+function saveNotifs(list) {
+  try { localStorage.setItem(NOTIF_KEY, JSON.stringify(list.slice(0, 100))); }
+  catch (e) {}
+}
+
+function timeAgo(iso) {
+  const d = new Date(iso);
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60) return 'только что';
+  if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад';
+  if (diff < 604800) return Math.floor(diff / 86400) + ' дн назад';
+  return d.toLocaleDateString('ru-RU') + ' ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+}
+
+const NOTIF_ICONS = {
+  booking:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>`,
+  callback: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>`,
+  cta:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  contact:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`,
+  resume:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" x2="15" y1="13" y2="13"/><line x1="9" x2="15" y1="17" y2="17"/><line x1="9" x2="13" y1="9" y2="9"/></svg>`,
+  review:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  info:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>`
+};
+window.renderAdminNotifications = function () {
+  const list = document.getElementById('notif-list');
+  const sub = document.getElementById('notif-sub');
+  if (!list) return;
+
+  const notifs = loadNotifs();
+  const unread = notifs.filter(n => !n.read).length;
+
+  if (sub) {
+    sub.textContent = unread > 0 ? unread + ' новых' : 'Нет новых';
+  }
+
+  if (!notifs.length) {
+    list.innerHTML = '<div class="notif-empty">Пока нет уведомлений</div>';
+    return;
+  }
+
+  list.innerHTML = notifs.map(n => `
+  <div class="notif-item ${n.read ? '' : 'unread'}" data-notif-id="${n.id}">
+    <div class="notif-item-icon">${NOTIF_ICONS[n.type] || NOTIF_ICONS.info}</div>
+    <div class="notif-item-body">
+      <div class="notif-item-title">${escapeHtml(n.title)}</div>
+      <div class="notif-item-msg">${escapeHtml(n.message)}</div>
+      <div class="notif-item-date">${timeAgo(n.createdAt)}</div>
+    </div>
+    <button type="button" class="notif-item-del" data-notif-del="${n.id}" title="Удалить">×</button>
+  </div>
+`).join('');
+
+  // Клик по уведомлению — открыть раздел
+  list.querySelectorAll('[data-notif-id]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('[data-notif-del]')) return;
+      const id = el.dataset.notifId;
+      const n = loadNotifs().find(x => x.id === id);
+      if (!n) return;
+
+      // Пометить как прочитанное
+      const notifs = loadNotifs();
+      const target = notifs.find(x => x.id === id);
+      if (target) { target.read = true; saveNotifs(notifs); }
+
+      // Перейти в нужный раздел
+      const map = {
+        booking: 'bookings',
+        callback: 'bookings',
+        cta: 'bookings',
+        contact: 'clients',
+        resume: 'clients',
+        review: 'content'
+      };
+      const pane = map[n.type];
+      if (pane) switchPane(pane);
+
+      // Закрыть дропдаун
+      document.getElementById('notif-dropdown')?.classList.remove('open');
+      window.renderAdminNotifications();
+      window.updateAdminNotifBadge();
+    });
+  });
+
+  // Удаление одного
+  list.querySelectorAll('[data-notif-del]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.notifDel;
+      saveNotifs(loadNotifs().filter(x => x.id !== id));
+      window.renderAdminNotifications();
+      window.updateAdminNotifBadge();
+    });
+  });
+};
+
+window.updateAdminNotifBadge = function () {
+  const notifs = loadNotifs();
+  const unread = notifs.filter(n => !n.read).length;
+  const dot = document.getElementById('notif-dot');
+  const count = document.getElementById('notif-count');
+  if (count) {
+    if (unread > 0) {
+      count.textContent = unread > 99 ? '99+' : unread;
+      count.style.display = '';
+      if (dot) dot.style.display = 'none';
+    } else {
+      count.style.display = 'none';
+      if (dot) dot.style.display = 'none';
+    }
+  }
+};
+
+function initNotifications() {
+  const btn = document.getElementById('notif-btn');
+  const dd = document.getElementById('notif-dropdown');
+  const markAll = document.getElementById('notif-mark-all');
+  const clearAll = document.getElementById('notif-clear');
+  if (!btn || !dd) return;
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dd.classList.toggle('open');
+    if (dd.classList.contains('open')) {
+      window.renderAdminNotifications();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.notif-wrap')) {
+      dd.classList.remove('open');
+    }
+  });
+
+  markAll?.addEventListener('click', () => {
+    const list = loadNotifs().map(n => ({ ...n, read: true }));
+    saveNotifs(list);
+    window.renderAdminNotifications();
+    window.updateAdminNotifBadge();
+  });
+
+  clearAll?.addEventListener('click', () => {
+    if (!confirm('Очистить все уведомления?')) return;
+    saveNotifs([]);
+    window.renderAdminNotifications();
+    window.updateAdminNotifBadge();
+  });
+
+  window.updateAdminNotifBadge();
+
+  // Автообновление каждые 5 секунд (на случай, если сайт открыт в другой вкладке)
+  setInterval(() => {
+    window.updateAdminNotifBadge();
+  }, 5000);
+}
+/* ============================================================
+   ГРАФИК ДИНАМИКИ ПРОДАЖ
+============================================================ */
+let currentSalesPeriod = '12m';
+
+const SALES_DATA = {
+  '12m': {
+    labels: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
+    heights: [35, 45, 52, 48, 60, 55, 72, 68, 62, 74, 82, 90],
+    revenue: 186400,
+    tours: 412
+  },
+  '6m': {
+    labels: ['Июл','Авг','Сен','Окт','Ноя','Дек'],
+    heights: [72, 68, 62, 74, 82, 90],
+    revenue: 112800,
+    tours: 248
+  },
+  '30d': {
+    labels: ['1','5','10','15','20','25','30'],
+    heights: [40, 55, 48, 72, 65, 88, 95],
+    revenue: 28400,
+    tours: 62
+  }
+};
+function renderSalesChart(period) {
+  const chart = document.getElementById('sales-chart');
+  const subtitle = document.getElementById('sales-subtitle');
+  if (!chart) return;
+
+  if (period) currentSalesPeriod = period;
+ const data = SALES_DATA[currentSalesPeriod] || SALES_DATA['12m'];
+const periodLabel = currentSalesPeriod === '12m' ? 'за год' :
+                    currentSalesPeriod === '6m' ? 'за 6 месяцев' :
+                    'за 30 дней';
+const tourWord = data.tours === 1 ? 'путёвка' :
+                 data.tours < 5 ? 'путёвки' : 'путёвок';
+if (subtitle) {
+  subtitle.textContent = `${formatMoney(data.revenue)} · ${data.tours} ${tourWord} ${periodLabel}`;
+}
+
+  const maxHeight = Math.max(...data.heights, 1);
+
+  chart.innerHTML = data.labels.map((label, i) => {
+    const heightPct = Math.round((data.heights[i] / maxHeight) * 95);
+    return `
+      <div class="bar-col">
+        <div class="bar" style="height:${heightPct}%;"></div>
+        <span class="bar-label">${label}</span>
+      </div>
+    `;
+  }).join('');
+
+  // Плавное появление столбцов
+  chart.querySelectorAll('.bar').forEach((bar, i) => {
+    bar.style.opacity = '0';
+    bar.style.transform = 'scaleY(0)';
+    bar.style.transformOrigin = 'bottom';
+    setTimeout(() => {
+      bar.style.transition = 'opacity .4s ease, transform .5s cubic-bezier(.2,.9,.3,1)';
+      bar.style.opacity = '1';
+      bar.style.transform = 'scaleY(1)';
+    }, i * 30);
+  });
+}
+
+/* ---- Инициализация кнопок-периодов ---- */
+function initSalesPeriodSelect() {
+  const container = document.getElementById('sales-period');
+  if (!container) return;
+
+  // Если это группа кнопок
+  if (container.classList.contains('period-switch')) {
+    container.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderSalesChart(btn.dataset.period);
+      });
+    });
+  } else if (container.tagName === 'SELECT') {
+    // Старый вариант — селект
+    container.value = currentSalesPeriod;
+    container.addEventListener('change', (e) => {
+      renderSalesChart(e.target.value);
+    });
+  }
+}
+/* ============================================================
+   ОБНОВЛЕНИЕ ВСЕХ СУММ ПРИ СМЕНЕ ВАЛЮТЫ
+============================================================ */
+function updateAllMoneyDisplays() {
+  const sym = getCurrencySymbol();
+
+  // ===== 1. KPI-карточки на Дашборде =====
+  const kpiMap = {
+    'kpi-revenue': 186400,
+    'kpi-bookings': null,
+    'kpi-tours': null,
+    'kpi-clients': null
+  };
+  Object.entries(kpiMap).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (el && value !== null) {
+      el.textContent = formatMoney(value);
+    }
+  });
+
+  // ===== 2. KPI на странице «Бронирования» =====
+  const bookingKpis = [
+    { value: 148200, label: 'Оплачено за июнь' },
+    { value: 24900,  label: 'Ожидает оплаты' },
+    { value: 3400,   label: 'Возвраты' },
+    { value: 1240,   label: 'Средний чек' }
+  ];
+  document.querySelectorAll('.admin-pane[data-pane-content="bookings"] .kpi-value').forEach((el, i) => {
+    if (bookingKpis[i]) el.textContent = formatMoney(bookingKpis[i].value);
+  });
+
+  // ===== 3. KPI на странице «Туры» =====
+  const toursKpis = [
+    { value: 148,    isMoney: false, suffix: '' },        // количество
+    { value: 132,    isMoney: false, suffix: '' },        // количество
+    { value: 16,     isMoney: false, suffix: '' },        // количество
+    { value: 1280,   isMoney: true }                       // средняя цена
+  ];
+  document.querySelectorAll('.admin-pane[data-pane-content="tours"] .kpi-value').forEach((el, i) => {
+    const k = toursKpis[i];
+    if (!k) return;
+    el.textContent = k.isMoney ? formatMoney(k.value) : (k.value + (k.suffix || ''));
+  });
+
+  // ===== 4. Подзаголовки в HTML, где цифры прописаны статично =====
+  // Динамика продаж
+  const salesChart = document.getElementById('sales-chart');
+  if (salesChart) {
+    renderSalesChart();
+  }
+
+  // ===== 5. Все остальные блоки — перерисовываем полностью =====
+  try { renderDashboardBookings(); } catch (e) {}
+  try { renderPendingBookings(); } catch (e) {}
+  try { renderBookingsTable(); } catch (e) {}
+  try { renderToursTable(); } catch (e) {}
+  try { renderClientDetail(); } catch (e) {}
+
+  addLog('Отображение валюты обновлено: ' + sym);
+}
 })();
+/* ============================================================
+   УНИВЕРСАЛЬНОЕ ЗАКРЫТИЕ ВСЕХ МОДАЛОК
+   Работает на любой кнопке и любом фоне
+============================================================ */
+
+// Делегирование: клик по кнопке закрытия или фону
+document.addEventListener('click', (e) => {
+  // 1. Кнопка "×" (.modal-close)
+  const closeBtn = e.target.closest('.modal-close');
+  if (closeBtn) {
+    const modal = closeBtn.closest('.modal-overlay');
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    return;
+  }
+
+  // 2. Кнопка "Закрыть" / "Отмена" ([data-close])
+  const dataCloseBtn = e.target.closest('[data-close]');
+  if (dataCloseBtn) {
+    e.preventDefault();
+    const modal = dataCloseBtn.closest('.modal-overlay');
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    return;
+  }
+
+  // 3. Клик по фону модалки (сам .modal-overlay)
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+// Escape закрывает все открытые модалки
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => {
+      m.classList.remove('open');
+    });
+    document.body.style.overflow = '';
+  }
+  /* ============================================================
+   ЗАГРУЗКА АВАТАРКИ АДМИНА
+============================================================ */
+function initAdminAvatar() {
+  console.log('initAdminAvatar: запуск');
+
+  const preview = document.getElementById('admin-avatar-preview');
+  const letter = document.getElementById('admin-avatar-letter');
+  const fileInput = document.getElementById('admin-avatar-input');
+  const pickBtn = document.getElementById('admin-avatar-pick');
+  const removeBtn = document.getElementById('admin-avatar-remove');
+
+  console.log('Элементы найдены:', {
+    preview: !!preview,
+    fileInput: !!fileInput,
+    pickBtn: !!pickBtn,
+    removeBtn: !!removeBtn
+  });
+
+  if (!preview || !fileInput || !pickBtn) {
+    console.warn('initAdminAvatar: не все элементы найдены');
+    return;
+  }
+
+  // Загружаем текущий аватар
+  loadCurrentAvatar();
+
+  function loadCurrentAvatar() {
+    const profile = load(KEYS.adminProfile, {});
+    const avatar = profile.avatar || '';
+    const name = profile.name || 'А';
+
+    if (avatar) {
+      preview.style.backgroundImage = 'url(' + avatar + ')';
+      preview.classList.add('has-image');
+      if (removeBtn) removeBtn.style.display = '';
+    } else {
+      preview.style.backgroundImage = '';
+      preview.classList.remove('has-image');
+      if (letter) letter.textContent = initials(name) || 'А';
+      if (removeBtn) removeBtn.style.display = 'none';
+    }
+  }
+
+  // Клик по кнопке → открываем выбор файла
+  pickBtn.onclick = function (e) {
+    e.preventDefault();
+    console.log('Клик по "Загрузить фото"');
+    fileInput.click();
+  };
+
+  // Обработка файла
+  fileInput.onchange = function (e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    console.log('Файл выбран:', file.name, file.size, 'байт');
+
+    if (file.size > 5 * 1024 * 1024) {
+      if (window.showToast) showToast('Файл слишком большой (макс. 5 МБ)', 'error');
+      else alert('Файл слишком большой (макс. 5 МБ)');
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      if (window.showToast) showToast('Только изображения', 'error');
+      else alert('Только изображения');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      const img = new Image();
+      img.onload = function () {
+        // Сжимаем до 400×400 квадрат
+        const MAX = 400;
+        let w = img.width, h = img.height;
+        const ratio = Math.min(MAX / w, MAX / h, 1);
+        w = Math.round(w * ratio);
+        h = Math.round(h * ratio);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+
+        // Квадрат по центру
+        const size = Math.min(w, h);
+        const sq = document.createElement('canvas');
+        sq.width = size;
+        sq.height = size;
+        sq.getContext('2d').drawImage(canvas, (w - size) / 2, (h - size) / 2, size, size, 0, 0, size, size);
+
+        const dataUrl = sq.toDataURL('image/jpeg', 0.82);
+        console.log('Аватар сжат до', dataUrl.length, 'символов');
+
+        // Сохраняем
+        const profile = load(KEYS.adminProfile, {});
+        profile.avatar = dataUrl;
+        save(KEYS.adminProfile, profile);
+
+        // Обновляем UI
+        preview.style.backgroundImage = 'url(' + dataUrl + ')';
+        preview.classList.add('has-image');
+        if (removeBtn) removeBtn.style.display = '';
+
+        // Обновляем шапку
+        if (typeof updateTopbarUser === 'function') updateTopbarUser();
+
+        if (typeof addLog === 'function') addLog('Обновлена аватарка администратора');
+        if (window.showToast) showToast('✓ Аватар обновлён');
+        else alert('✓ Аватар обновлён');
+      };
+      img.onerror = function () {
+        console.error('Ошибка загрузки изображения');
+        if (window.showToast) showToast('Не удалось загрузить фото', 'error');
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+    fileInput.value = '';
+  };
+
+  // Удаление
+  if (removeBtn) {
+    removeBtn.onclick = function (e) {
+      e.preventDefault();
+      if (!confirm('Удалить аватарку?')) return;
+      const profile = load(KEYS.adminProfile, {});
+      delete profile.avatar;
+      save(KEYS.adminProfile, profile);
+      loadCurrentAvatar();
+      if (typeof updateTopbarUser === 'function') updateTopbarUser();
+      if (window.showToast) showToast('✓ Аватар удалён');
+    };
+  }
+}
+
+// Экспортируем наружу, чтобы можно было вызывать вручную
+window.initAdminAvatar = initAdminAvatar;
+});
